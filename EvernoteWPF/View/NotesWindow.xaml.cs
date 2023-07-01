@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace EvernoteWPF.View
 {
@@ -25,6 +15,11 @@ namespace EvernoteWPF.View
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void SpeechButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

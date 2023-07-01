@@ -9,6 +9,7 @@ namespace EvernoteWPF.ViewModel
     public class NotesViewModel
     {
         public ObservableCollection<Notebook> Notebooks { get; set; }
+        public ObservableCollection<Note> Notes { get; set; }
 
         private Note selectedNotebook;
 
@@ -22,7 +23,6 @@ namespace EvernoteWPF.ViewModel
             }
         }
 
-        public ObservableCollection<Note> Notes { get; set; }
         public NewNotebookCommand NewNotebookCommand { get; set; }
         public NewNoteCommand NewNoteCommand { get; set; }
 
