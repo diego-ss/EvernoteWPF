@@ -1,12 +1,17 @@
 ﻿using EvernoteWPF.Model;
 using System;
+using System.Windows.Input;
 
 namespace EvernoteWPF.ViewModel.Commands
 {
-    public class NewNoteCommand
+    public class NewNoteCommand : ICommand
     {
         public NotesViewModel NotesViewModel { get; set; }
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
 
         public NewNoteCommand(NotesViewModel notesViewModel)
         {
@@ -17,10 +22,7 @@ namespace EvernoteWPF.ViewModel.Commands
         {
             Notebook notebook = parameter as Notebook;
 
-            if(notebook != null)
-                return true;
-
-            return false;
+            return notebook != null;
         }
 
         public void Execute(object parameter)

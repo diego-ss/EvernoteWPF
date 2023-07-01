@@ -3,34 +3,45 @@ using EvernoteWPF.ViewModel.Commands;
 using EvernoteWPF.ViewModel.Helpers;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 
 namespace EvernoteWPF.ViewModel
 {
-    public class NotesViewModel
+    public class NotesViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<Notebook> Notebooks { get; set; }
         public ObservableCollection<Note> Notes { get; set; }
 
-        private Note selectedNotebook;
+        private Notebook selectedNotebook;
 
-        public Note SelectedNotebook
+        public Notebook SelectedNotebook
         {
             get { return selectedNotebook; }
             set
             {
                 selectedNotebook = value;
-                //TODO: get notes
+                OnPropertyChanged("SelectedNotebook");
+                GetNotes();
             }
         }
 
         public NewNotebookCommand NewNotebookCommand { get; set; }
         public NewNoteCommand NewNoteCommand { get; set; }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public NotesViewModel()
         {
             NewNoteCommand = new NewNoteCommand(this);
             NewNotebookCommand = new NewNotebookCommand(this);
+
+            Notebooks = new ObservableCollection<Notebook>();
+            Notes = new ObservableCollection<Note>();
+
+            GetNotebooks();
         }
+
 
         public void CreateNote(int notebookId)
         {
@@ -39,10 +50,11 @@ namespace EvernoteWPF.ViewModel
                 NotebookId = notebookId,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
-                Title = "New note"
+                Title = $"Note for {DateTime.Now.ToString()}"
             };
 
             DatabaseHelper.Insert(note);
+            GetNotes();
         }
 
         public void CreateNotebook()
@@ -53,7 +65,38 @@ namespace EvernoteWPF.ViewModel
             };
 
             DatabaseHelper.Insert(notebook);
+            GetNotebooks();
+        }
 
+        private void GetNotebooks()
+        {
+            var list = DatabaseHelper.ListItems<Notebook>();
+
+            Notebooks.Clear();
+            list.ForEach(notebook =>
+            {
+                Notebooks.Add(notebook);
+            });
+        }
+
+        private void GetNotes()
+        {
+            if(SelectedNotebook != null)
+            {
+                var list = DatabaseHelper.ListItems<Note>()
+                    .Where(n => n.NotebookId == selectedNotebook.Id).ToList();
+
+                Notes.Clear();
+                list.ForEach(note =>
+                {
+                    Notes.Add(note);
+                });
+            }
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
