@@ -8,7 +8,7 @@ namespace EvernoteWPF.ViewModel.Commands
         public LoginViewModel LoginViewModel { get; set; }
         public event EventHandler CanExecuteChanged;
 
-        public LogginCommand(LoginViewModel loginViewModel)
+        public LoginCommand(LoginViewModel loginViewModel)
         {
             LoginViewModel = loginViewModel;
         }

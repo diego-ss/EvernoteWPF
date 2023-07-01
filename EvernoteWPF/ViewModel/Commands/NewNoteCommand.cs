@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EvernoteWPF.Model;
+using System;
 
 namespace EvernoteWPF.ViewModel.Commands
 {
@@ -14,12 +15,18 @@ namespace EvernoteWPF.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            Notebook notebook = parameter as Notebook;
+
+            if(notebook != null)
+                return true;
+
+            return false;
         }
 
         public void Execute(object parameter)
         {
-            //TODO: Create new notebook
+            Notebook notebook = (Notebook)parameter;
+            NotesViewModel.CreateNote(notebook.Id);
         }
     }
 }
