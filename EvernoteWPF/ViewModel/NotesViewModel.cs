@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 
 namespace EvernoteWPF.ViewModel
 {
@@ -26,8 +27,21 @@ namespace EvernoteWPF.ViewModel
             }
         }
 
+        private Visibility editNotebookTextBoxVisibility;
+
+        public Visibility EditNotebookTextBoxVisibility
+        {
+            get { return editNotebookTextBoxVisibility; }
+            set { 
+                editNotebookTextBoxVisibility = value; 
+                OnPropertyChanged(nameof(EditNotebookTextBoxVisibility));
+            }
+        }
+
+
         public NewNotebookCommand NewNotebookCommand { get; set; }
         public NewNoteCommand NewNoteCommand { get; set; }
+        public EditCommand EditCommand { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -35,9 +49,12 @@ namespace EvernoteWPF.ViewModel
         {
             NewNoteCommand = new NewNoteCommand(this);
             NewNotebookCommand = new NewNotebookCommand(this);
+            EditCommand = new EditCommand(this);
 
             Notebooks = new ObservableCollection<Notebook>();
             Notes = new ObservableCollection<Note>();
+
+            EditNotebookTextBoxVisibility = Visibility.Collapsed;
 
             GetNotebooks();
         }
@@ -97,6 +114,16 @@ namespace EvernoteWPF.ViewModel
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void StartEditing()
+        {
+            EditNotebookTextBoxVisibility = Visibility.Visible;
+        }
+
+        public void StopEditing()
+        {
+            EditNotebookTextBoxVisibility = Visibility.Collapsed;
         }
     }
 }
