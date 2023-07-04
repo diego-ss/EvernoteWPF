@@ -1,6 +1,10 @@
-﻿using Microsoft.CognitiveServices.Speech;
+﻿using EvernoteWPF.ViewModel;
+using EvernoteWPF.ViewModel.Helpers;
+using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
@@ -14,15 +18,36 @@ namespace EvernoteWPF.View
     /// </summary>
     public partial class NotesWindow : Window
     {
+        NotesViewModel viewModel;
+
         public NotesWindow()
         {
             InitializeComponent();
+
+            viewModel = Resources["vm"] as NotesViewModel;
+            viewModel.SelectedNoteChanged += ViewModel_SelectedNoteChanged;
 
             var fontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             fontFamilyComboBox.ItemsSource = fontFamilies;
 
             var fontSizes = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 28, 48, 72 };
             fontSizeComboBox.ItemsSource = fontSizes;
+        }
+
+        private void ViewModel_SelectedNoteChanged(object sender, EventArgs e)
+        {
+            contentRichTextBox.Document.Blocks.Clear();
+
+            if(viewModel.SelectedNote != null)
+            {
+                if (!string.IsNullOrEmpty(viewModel.SelectedNote.FileLocation))
+                {
+                    FileStream fileStream = new FileStream(viewModel.SelectedNote.FileLocation, FileMode.Open);
+                    var content = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+                    content.Load(fileStream, DataFormats.Rtf);
+                    fileStream.Close();
+                }
+            }
         }
 
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
@@ -109,6 +134,19 @@ namespace EvernoteWPF.View
         {
             if (fontSizeComboBox.SelectedValue != null)
                 contentRichTextBox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSizeComboBox.Text);
+        }
+
+        private void SaveNoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            string rtfFile = Path.Combine(Environment.CurrentDirectory, $"{viewModel.SelectedNote.Id}.rtf");
+            viewModel.SelectedNote.FileLocation = rtfFile;
+
+            DatabaseHelper.Update(viewModel.SelectedNote);
+
+            FileStream fileStream = new FileStream(rtfFile, FileMode.Create);
+            var content = new TextRange(contentRichTextBox.Document.ContentStart, contentRichTextBox.Document.ContentEnd);
+            content.Save(fileStream, DataFormats.Rtf);
+            fileStream.Close();
         }
     }
 }

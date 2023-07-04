@@ -27,6 +27,19 @@ namespace EvernoteWPF.ViewModel
             }
         }
 
+        private Note selectedNote;
+
+        public Note SelectedNote
+        {
+            get { return selectedNote; }
+            set { 
+                selectedNote = value;
+                OnPropertyChanged(nameof(SelectedNote));
+                SelectedNoteChanged?.Invoke(this, new EventArgs());
+            }
+        }
+
+
         private Visibility editNotebookTextBoxVisibility;
 
         public Visibility EditNotebookTextBoxVisibility
@@ -45,6 +58,7 @@ namespace EvernoteWPF.ViewModel
         public EndEditingCommand EndEditingCommand { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler SelectedNoteChanged;
 
         public NotesViewModel()
         {
