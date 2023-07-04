@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:EvernoteWPF.View"
         xmlns:vm="clr-namespace:EvernoteWPF.ViewModel"
         xmlns:uc="clr-namespace:EvernoteWPF.View.UserControls"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="NotesWindow" Height="450" Width="800">
 
@@ -52,8 +53,15 @@
                                 </ContextMenu>
                             </uc:DisplayNotebookControl.ContextMenu>
                         </uc:DisplayNotebookControl>
-                        <TextBox Text="{Binding Name}"
-                                 Visibility="{Binding Source={StaticResource vm}, Path=EditNotebookTextBoxVisibility}"/>
+                        <TextBox Text="{Binding Name, Mode=TwoWay}"
+                                 Visibility="{Binding Source={StaticResource vm}, Path=EditNotebookTextBoxVisibility}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding Source={StaticResource vm}, Path=EndEditingCommand}"
+                                                           CommandParameter="{Binding}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
