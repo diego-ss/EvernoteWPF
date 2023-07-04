@@ -13,8 +13,100 @@ namespace EvernoteWPF.ViewModel
 		public User User
 		{
 			get { return user; }
-			set { user = value; }
+			set { 
+				user = value;
+				OnPropertyChanged(nameof(User));
+			}
 		}
+
+		private string username;
+
+		public string Username
+		{
+			get { return username; }
+			set { 
+				username = value;
+				User = new User
+				{
+					Username = username,
+					Password = this.Password
+				};
+                OnPropertyChanged(nameof(Username));
+            }
+        }
+
+		private string password;
+
+		public string Password
+		{
+			get { return password; }
+			set { 
+				password = value;
+                User = new User
+                {
+                    Username = this.Username,
+                    Password = password
+                };
+                OnPropertyChanged(nameof(Password));
+            }
+        }
+
+        private string name;
+
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                name = value;
+				User = new User
+				{
+					Username = this.username,
+					Password = this.password,
+					Name = name
+                };
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+
+        private string lastName;
+
+        public string Lastname
+        {
+            get { return lastName; }
+            set
+            {
+                lastName = value;
+                User = new User
+                {
+                    Username = this.username,
+                    Password = this.password,
+                    Name = this.Name,
+					Lastname = lastName
+                };
+                OnPropertyChanged(nameof(Lastname));
+            }
+        }
+
+        private string confirmPassword;
+
+        public string ConfirmPassword
+        {
+            get { return confirmPassword; }
+            set
+            {
+                confirmPassword = value;
+                User = new User
+                {
+                    Username = this.username,
+                    Password = this.password,
+                    Name = this.Name,
+                    Lastname = this.lastName,
+                    ConfirmPassword = confirmPassword
+                };
+                OnPropertyChanged(nameof(ConfirmPassword));
+            }
+        }
 
         private Visibility loginVis;
         public Visibility LoginVis
@@ -51,6 +143,7 @@ namespace EvernoteWPF.ViewModel
 			RegisterCommand = new RegisterCommand(this);
 			LoginCommand = new LoginCommand(this);
 			ShowRegisterCommand = new ShowRegisterCommand(this);
+			User = new User();
 		}
 
 		public void SwitchViews()
@@ -68,7 +161,17 @@ namespace EvernoteWPF.ViewModel
             }
 		}
 
-		private void OnPropertyChanged(string propertyName)
+		public void Login()
+		{
+			//TODO: login
+		}
+
+        public void Register()
+        {
+            //TODO: Register
+        }
+
+        private void OnPropertyChanged(string propertyName)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
