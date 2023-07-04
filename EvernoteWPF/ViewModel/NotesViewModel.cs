@@ -101,7 +101,7 @@ namespace EvernoteWPF.ViewModel
             GetNotebooks();
         }
 
-        private void GetNotebooks()
+        public void GetNotebooks()
         {
             var list = DatabaseHelper.ListItems<Notebook>();
 

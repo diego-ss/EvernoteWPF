@@ -34,6 +34,19 @@ namespace EvernoteWPF.View
             fontSizeComboBox.ItemsSource = fontSizes;
         }
 
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+
+            if (string.IsNullOrEmpty(App.UserId))
+            {
+                LoginWindow login = new LoginWindow();
+                login.ShowDialog();
+
+                viewModel.GetNotebooks();
+            }
+        }
+
         private void ViewModel_SelectedNoteChanged(object sender, EventArgs e)
         {
             contentRichTextBox.Document.Blocks.Clear();
