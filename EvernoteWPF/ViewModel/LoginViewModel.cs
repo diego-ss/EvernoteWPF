@@ -1,5 +1,6 @@
 ﻿using EvernoteWPF.Model;
 using EvernoteWPF.ViewModel.Commands;
+using EvernoteWPF.ViewModel.Helpers;
 using System.ComponentModel;
 using System.Windows;
 
@@ -166,9 +167,9 @@ namespace EvernoteWPF.ViewModel
 			//TODO: login
 		}
 
-        public void Register()
+        public async void Register()
         {
-            //TODO: Register
+            await FirebaseAuthHelper.Register(User);
         }
 
         private void OnPropertyChanged(string propertyName)
