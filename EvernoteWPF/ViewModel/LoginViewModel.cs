@@ -1,6 +1,7 @@
 ﻿using EvernoteWPF.Model;
 using EvernoteWPF.ViewModel.Commands;
 using EvernoteWPF.ViewModel.Helpers;
+using System;
 using System.ComponentModel;
 using System.Windows;
 
@@ -131,6 +132,7 @@ namespace EvernoteWPF.ViewModel
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler Authenticated;
 
         public RegisterCommand RegisterCommand { get; set; }
         public ShowRegisterCommand ShowRegisterCommand { get; set; }
@@ -162,14 +164,20 @@ namespace EvernoteWPF.ViewModel
             }
 		}
 
-		public void Login()
+		public async void Login()
 		{
-			//TODO: login
+            var login = await FirebaseAuthHelper.Login(User);
+
+            if(login)
+                Authenticated?.Invoke(this, new EventArgs());
 		}
 
         public async void Register()
         {
-            await FirebaseAuthHelper.Register(User);
+            var register = await FirebaseAuthHelper.Register(User);
+
+            if (register)
+                Authenticated?.Invoke(this, new EventArgs());
         }
 
         private void OnPropertyChanged(string propertyName)

@@ -7,7 +7,7 @@ namespace EvernoteWPF.Model
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         [Indexed]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         [MaxLength(50)]
         public string Name { get; set; }
     }

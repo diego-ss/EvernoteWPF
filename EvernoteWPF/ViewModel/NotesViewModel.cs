@@ -94,7 +94,8 @@ namespace EvernoteWPF.ViewModel
         {
             Notebook notebook = new Notebook
             {
-                Name = "New notebook"
+                Name = "New notebook",
+                UserId = App.UserId
             };
 
             DatabaseHelper.Insert(notebook);
@@ -103,7 +104,7 @@ namespace EvernoteWPF.ViewModel
 
         public void GetNotebooks()
         {
-            var list = DatabaseHelper.ListItems<Notebook>();
+            var list = DatabaseHelper.ListItems<Notebook>().Where(n => n.UserId == App.UserId).ToList();
 
             Notebooks.Clear();
             list.ForEach(notebook =>
