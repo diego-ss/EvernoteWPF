@@ -1,14 +1,13 @@
-﻿using SQLite;
-
-namespace EvernoteWPF.Model
+﻿namespace EvernoteWPF.Model
 {
-    public class Notebook
+    public class HasId
     {
-        [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
-        [Indexed]
+        public string Id { get; set; }
+    }
+
+    public class Notebook : HasId
+    {
         public string UserId { get; set; }
-        [MaxLength(50)]
         public string Name { get; set; }
     }
 }

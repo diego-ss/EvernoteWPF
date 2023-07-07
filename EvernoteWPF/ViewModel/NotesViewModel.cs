@@ -76,7 +76,7 @@ namespace EvernoteWPF.ViewModel
         }
 
 
-        public async void CreateNote(int notebookId)
+        public async void CreateNote(string notebookId)
         {
             Note note = new Note
             {
@@ -102,9 +102,9 @@ namespace EvernoteWPF.ViewModel
             GetNotebooks();
         }
 
-        public void GetNotebooks()
+        public async void GetNotebooks()
         {
-            var list = DatabaseHelper.ListItems<Notebook>().Where(n => n.UserId == App.UserId).ToList();
+            var list = (await DatabaseHelper.ListItems<Notebook>()).Where(n => n.UserId == App.UserId).ToList();
 
             Notebooks.Clear();
             list.ForEach(notebook =>
@@ -113,15 +113,14 @@ namespace EvernoteWPF.ViewModel
             });
         }
 
-        private void GetNotes()
+        private async void GetNotes()
         {
             if(SelectedNotebook != null)
             {
-                var list = DatabaseHelper.ListItems<Note>()
-                    .Where(n => n.NotebookId == selectedNotebook.Id).ToList();
+                var list = (await DatabaseHelper.ListItems<Note>())?.Where(n => n.NotebookId == selectedNotebook.Id).ToList();
 
                 Notes.Clear();
-                list.ForEach(note =>
+                list?.ForEach(note =>
                 {
                     Notes.Add(note);
                 });
