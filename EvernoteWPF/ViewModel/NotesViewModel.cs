@@ -76,7 +76,7 @@ namespace EvernoteWPF.ViewModel
         }
 
 
-        public void CreateNote(int notebookId)
+        public async void CreateNote(int notebookId)
         {
             Note note = new Note
             {
@@ -86,11 +86,11 @@ namespace EvernoteWPF.ViewModel
                 Title = $"Note for {DateTime.Now.ToString()}"
             };
 
-            DatabaseHelper.Insert(note);
+            await DatabaseHelper.Insert(note);
             GetNotes();
         }
 
-        public void CreateNotebook()
+        public async void CreateNotebook()
         {
             Notebook notebook = new Notebook
             {
@@ -98,7 +98,7 @@ namespace EvernoteWPF.ViewModel
                 UserId = App.UserId
             };
 
-            DatabaseHelper.Insert(notebook);
+            await DatabaseHelper.Insert(notebook);
             GetNotebooks();
         }
 
